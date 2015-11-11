@@ -12,17 +12,17 @@ import java.util.List;
 import org.apache.http.Consts;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
+import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 
-@SuppressWarnings("deprecation")
-public class A {
+public class Navegador {
 
-    private final DefaultHttpClient client = new DefaultHttpClient();
+    private final HttpClient client = HttpClientBuilder.create().build();
 
     /**
      * Efetua login no site
@@ -55,10 +55,10 @@ public class A {
 	 * Antes do encoder: fulano@email.com Depois do enconder:
 	 * fulano%40email.com
 	 */
-	post.setEntity(new UrlEncodedFormEntity(nameValuePairs, Consts.UTF_8));
+	post.setEntity(new UrlEncodedFormEntity(nameValuePairs, Consts.ASCII));
 
 	/* Define navegador */
-	//post.addHeader("User-Agent", "Mozilla/5.0 (Windows 10 Pro) Gecko/20100101 Firefox/18.0");
+	post.addHeader("User-Agent", "Mozilla/5.0 (Windows NT 10.0; WOW64; rv:40.0) Gecko/20100101 Firefox/40.0");
 
 	/* Efetua o POST */
 	HttpResponse response = client.execute(post);
@@ -67,7 +67,7 @@ public class A {
 	 * Resposta HTTP: Sempre imprimirá “HTTP/1.1 302 Object moved” (no caso
 	 * da devmedia)
 	 */
-	System.out.println("Login form get: " + response.getStatusLine());
+	// System.out.println("Login form get: " + response.getStatusLine());
 
 	/*
 	 * Consome o conteúdo retornado pelo servidor Necessário esvaziar o
@@ -85,18 +85,19 @@ public class A {
 	 * sucesso
 	 * 
 	 */
+	openPage("http://online.iesb.br/aonline/notas_freq.asp");
 	final HttpGet get = new HttpGet("http://online.iesb.br/aonline/main.asp");
-	response = client.execute(get);
+	HttpResponse response_check = client.execute(get);
 
 	/*
 	 * Verifica se a String: "Login DevMedia" está presente
 	 */
-	if (checkSuccess(response)) {
+	if (checkSuccess(response_check)) {
 	    System.out.println("Conexao Estabelecida!");
 	    result = true;
-	} else {
-	    System.out.println("Login não-efetuado!");
-	}
+	} //else {
+//	    System.out.println("Login não-efetuado!\nSenha: " + password);
+//	}
 
 	return result;
     }
@@ -118,7 +119,7 @@ public class A {
      * Encerra conexão
      */
     public void close() {
-	client.getConnectionManager().shutdown();
+	// client.getConnectionManager().shutdown();
     }
 
     /**
@@ -156,7 +157,7 @@ public class A {
 	File arquivo = new File("C:/Users/Dell/Documents/arquivo.html");
 	PrintWriter writer = new PrintWriter(arquivo);
 	while ((line = rd.readLine()) != null) {
-	    System.out.println(line);
+//	    System.out.println(line);
 	    writer.println(line);
 	}
 	writer.flush();
@@ -168,16 +169,15 @@ public class A {
      * 
      * @param args
      */
-    public static void main(String[] args) {
-
-	A navegador = new A();
-
+    public static boolean start(List<String> args) {
+	Navegador navegador = new Navegador();
 	try {
 	    // Tenta efetuar login
-	    boolean ok = navegador.login("http://online.iesb.br/aonline/logon.asp", "1212082005", "augusto");
+	    boolean ok = navegador.login("http://online.iesb.br/aonline/middle_logon.asp", args.get(0), args.get(1));
 	    if (ok) {
 		// Acessa página restrita
 		navegador.openPage("http://online.iesb.br/aonline/main.asp");
+		return true;
 	    }
 	    navegador.close();
 	} catch (UnsupportedEncodingException ex) {
@@ -185,5 +185,6 @@ public class A {
 	} catch (IOException ex) {
 	    ex.printStackTrace();
 	}
+	return false;
     }
 }

