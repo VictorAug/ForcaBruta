@@ -20,11 +20,14 @@ public class ForcaBruta {
 	Scanner sc = new Scanner(System.in);
 	System.out.println("Login do Aluno Online: ");
 	usuario = sc.next();
-	initialTime = System.currentTimeMillis();
-	crack();
-	interval = System.currentTimeMillis() - initialTime;
-	System.out.println("Tempo(seg): " + interval / 1000);
-	gravarArq.println("Tempo(seg): " + interval / 1000);
+	
+//	for (int i = 0; i < 4; i++, N++) {
+	    initialTime = System.currentTimeMillis();
+	    crack();
+	    interval = System.currentTimeMillis() - initialTime;
+	    System.out.println("Tempo(seg): " + interval / 1000);
+	    gravarArq.println("Tempo(seg): " + interval / 1000);
+//	}
 	arq.close();
 	sc.close();
     }
