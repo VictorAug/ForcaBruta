@@ -68,3 +68,5 @@ Senha: [d, s, , , v] Tempo(s): 4389.706
 Senha: [, ì, , f, ] Tempo(s): 5547.524
 Senha: [<, ð, E, \, Ó] Tempo(s): 9176.457
 Senha: [3, %, , <, ª] Tempo(s): 7073.283
+
+Tempo(seg): 16831.257

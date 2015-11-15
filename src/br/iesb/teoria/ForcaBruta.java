@@ -9,7 +9,7 @@ import java.util.Scanner;
 
 public class ForcaBruta {
 
-    private static int N = 4;
+    private static int N = 1;
     private static double initialTime;
     private static double interval;
     private static String usuario;
@@ -20,42 +20,35 @@ public class ForcaBruta {
 	Scanner sc = new Scanner(System.in);
 	System.out.println("Login do Aluno Online: ");
 	usuario = sc.next();
-	
-//	for (int i = 0; i < 4; i++, N++) {
-	    initialTime = System.currentTimeMillis();
-	    crack();
-	    interval = System.currentTimeMillis() - initialTime;
-	    System.out.println("Tempo(seg): " + interval / 1000);
-	    gravarArq.println("Tempo(seg): " + interval / 1000);
-//	}
+
+	// for (int i = 0; i < 4; i++, N++) {
+	initialTime = System.currentTimeMillis();
+	crack();
+	interval = System.currentTimeMillis() - initialTime;
+	System.out.println("Tempo(seg): " + interval / 1000);
+	gravarArq.println("Tempo(seg): " + interval / 1000);
+	// }
 	arq.close();
 	sc.close();
     }
 
     private static void crack() {
-	List<Character> bam = new ArrayList<Character>();
 	Integer i;
-	for (int j = 0; j < N; j++)
-	    bam.add((char) 32);
-	int c2 = 0, c3 = 0, c4 = 0;
+	List<Character> bam = new ArrayList<Character>();
+	bam.add((char) 31);
 	do {
 	    i = 0;
-	    if (bam.get(1) > 32 && c2 == 0) {
-		c2 = 1;
-		System.out.println("A partir do 2° char!");
-	    } else if (bam.get(2) > 32 && c3 == 0) {
-		c3 = 1;
-		System.out.println("A partir do 3° char!");
-	    } else if (bam.get(3) > 32 && c4 == 0) {
-		c4 = 1;
-		System.out.println("A partir do 4° char!");
-	    }
 	    nextChar(bam, i); // bam[i]++
 	    while ((bam.get(i) == (char) 255) && (i < N)) {
+		if (bam.get(bam.size() - 1) == (char) 255) {
+		    bam.add((char) 31);
+		    N++;
+		}
 		bam.set(i++, (char) 32);
-		nextChar(bam, i); // bam[i]++
+		nextChar(bam, i);
 	    }
 	} while (!Navegador.start(Arrays.asList(usuario, bam.toString())));
+	System.out.println(bam);
     }
 
     private static void nextChar(List<Character> bam, Integer i) {
