@@ -20,14 +20,11 @@ public class ForcaBruta {
 	Scanner sc = new Scanner(System.in);
 	System.out.println("Login do Aluno Online: ");
 	usuario = sc.next();
-
-	// for (int i = 0; i < 4; i++, N++) {
 	initialTime = System.currentTimeMillis();
 	crack();
 	interval = System.currentTimeMillis() - initialTime;
 	System.out.println("Tempo(seg): " + interval / 1000);
 	gravarArq.println("Tempo(seg): " + interval / 1000);
-	// }
 	arq.close();
 	sc.close();
     }
@@ -40,10 +37,8 @@ public class ForcaBruta {
 	    i = 0;
 	    nextChar(bam, i); // bam[i]++
 	    while ((bam.get(i) == (char) 255) && (i < N)) {
-		if (bam.get(bam.size() - 1) == (char) 255) {
+		if (bam.get(N++ - 1) == (char) 255)
 		    bam.add((char) 31);
-		    N++;
-		}
 		bam.set(i++, (char) 32);
 		nextChar(bam, i);
 	    }
