@@ -20,13 +20,17 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 
+/**
+ * Class Navegador.
+ */
 public class Navegador {
 
+    /** Atributo client. */
     private final HttpClient client = HttpClientBuilder.create().build();
 
     /**
-     * Efetua login no site
-     * 
+     * Efetua login no site.
+     *
      * @param url
      *            - URL de Login do site
      * @param user
@@ -35,7 +39,9 @@ public class Navegador {
      *            - senha
      * @return true - login ok | false - login fail
      * @throws UnsupportedEncodingException
+     *             the unsupported encoding exception
      * @throws IOException
+     *             Sinaliza que uma I/O exception ocorreu.
      */
     public boolean login(final String url, final String user, final String password) throws UnsupportedEncodingException, IOException {
 
@@ -95,19 +101,20 @@ public class Navegador {
 	if (checkSuccess(response_check)) {
 	    System.out.println("Conexao Estabelecida!");
 	    result = true;
-	} //else {
-//	    System.out.println("Login não-efetuado!\nSenha: " + password);
-//	}
+	} // else {
+	  // System.out.println("Login não-efetuado!\nSenha: " + password);
+	  // }
 
 	return result;
     }
 
     /**
-     * Abre página
-     * 
+     * Abre página.
+     *
      * @param url
      *            - Página a acessar
      * @throws IOException
+     *             Sinaliza que uma I/O exception ocorreu.
      */
     public void openPage(final String url) throws IOException {
 	final HttpGet get = new HttpGet(url);
@@ -116,18 +123,13 @@ public class Navegador {
     }
 
     /**
-     * Encerra conexão
-     */
-    public void close() {
-	// client.getConnectionManager().shutdown();
-    }
-
-    /**
-     * Busca por String que indica se o usuário está logado ou não
-     * 
+     * Busca por String que indica se o usuário está logado ou não.
+     *
      * @param response
+     *            the response
      * @return true - Não achou String | false - Achou String
      * @throws IOException
+     *             Sinaliza que uma I/O exception ocorreu.
      */
     private boolean checkSuccess(final HttpResponse response) throws IOException {
 	final BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
@@ -146,10 +148,12 @@ public class Navegador {
     }
 
     /**
-     * Salva a página
-     * 
+     * Salva a página.
+     *
      * @param response
+     *            the response
      * @throws IOException
+     *             Sinaliza que uma I/O exception ocorreu.
      */
     private void saveHTML(final HttpResponse response) throws IOException {
 	final BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
@@ -157,7 +161,6 @@ public class Navegador {
 	File arquivo = new File("C:/Users/Dell/Documents/arquivo.html");
 	PrintWriter writer = new PrintWriter(arquivo);
 	while ((line = rd.readLine()) != null) {
-//	    System.out.println(line);
 	    writer.println(line);
 	}
 	writer.flush();
@@ -165,21 +168,22 @@ public class Navegador {
     }
 
     /**
-     * Roda aplicação
-     * 
+     * Inicia a aplicação da rede.
+     *
      * @param args
+     *            the args
+     * @return true, se bem-sucedido
      */
     public static boolean start(List<String> args) {
 	Navegador navegador = new Navegador();
 	try {
-	    // Tenta efetuar login
+	    // Tenta efetuar login na página de irrestrita
 	    boolean ok = navegador.login("http://online.iesb.br/aonline/middle_logon.asp", args.get(0), args.get(1));
 	    if (ok) {
 		// Acessa página restrita
 		navegador.openPage("http://online.iesb.br/aonline/main.asp");
 		return true;
 	    }
-	    navegador.close();
 	} catch (UnsupportedEncodingException ex) {
 	    ex.printStackTrace();
 	} catch (IOException ex) {
