@@ -90,7 +90,7 @@ public class ForcaBruta {
 
 		// testa se o último caracter da variável bam é o último da
 		// tabela ASCII.
-		if (bam.get(N++ - 1) == (char) 255)
+		if (bam.get(bam.size() - 1) == (char) 255)
 		    bam.add((char) 31);
 
 		// Além disso, coloca o caracter 32 da tabela
@@ -101,6 +101,7 @@ public class ForcaBruta {
 		// Se for, bam aumenta de tamanho adicionando um
 		// caracter vazio (31).
 		nextChar(bam, i);
+		N++;
 	    }
 	    // Só então tenta fazer o login no sítio do aluno online, passando
 	    // como parâmetro login e senha
